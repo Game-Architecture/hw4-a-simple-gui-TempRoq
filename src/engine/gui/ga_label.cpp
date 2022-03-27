@@ -14,7 +14,9 @@
 
 ga_label::ga_label(const char* text, float x, float y, ga_frame_params* params)
 {
-	// TODO: Homework 4
+	extern ga_font* g_font;
+	g_font->print(params,text, x, y, ga_widget::k_text_color);
+
 }
 
 ga_label::~ga_label()
