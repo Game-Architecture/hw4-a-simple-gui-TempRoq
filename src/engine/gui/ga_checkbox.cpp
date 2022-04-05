@@ -21,7 +21,7 @@ ga_checkbox::ga_checkbox(bool state, const char* text, float x, float y, ga_fram
 	_min = { x, _min.y };
 	_max = { x + (_max.y - _min.y), _max.y };
 
-	ga_widget::draw_outline(params, _min, _max, gw.k_button_color, gw.k_checkbox_offset);
+	ga_widget::draw_outline(params, _min, _max, gw.k_button_color, 0.0);
 
 	if (state) {
 		ga_widget::draw_check(params, _min, _max, gw.k_button_color);

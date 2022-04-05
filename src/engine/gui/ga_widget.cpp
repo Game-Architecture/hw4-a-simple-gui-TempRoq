@@ -24,10 +24,10 @@ void ga_widget::draw_outline(ga_frame_params* params, const ga_vec2f& min, const
 {
 	ga_dynamic_drawcall drawcall;
 
-	drawcall._positions.push_back({ min.x, min.y, 0.0f });
-	drawcall._positions.push_back({ max.x, min.y, 0.0f });
-	drawcall._positions.push_back({ max.x, max.y, 0.0f });
-	drawcall._positions.push_back({ min.x, max.y, 0.0f });
+	drawcall._positions.push_back({ min.x - offset, min.y - offset, 0.0f });
+	drawcall._positions.push_back({ max.x + offset, min.y - offset, 0.0f });
+	drawcall._positions.push_back({ max.x + offset, max.y + offset, 0.0f });
+	drawcall._positions.push_back({ min.x - offset, max.y + offset, 0.0f });
 
 
 	drawcall._indices.push_back(0);
