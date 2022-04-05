@@ -101,30 +101,43 @@ void ga_mesh::get_vertices(aiMesh* mesh)
 {
 	_name = mesh->mName.C_Str();
 
-	// 	// TODO: Homework 4
-	// load vertex positions, indices, uv's and normals from importer mesh into our data structure
-
 	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
-		// the mesh's mVertices array contains vertex coordinates
-		// our _vertex array needs them...
+		ga_vec3f pb;
+		pb.x = mesh->mVertices[i].x;
+		pb.y = mesh->mVertices[i].y;
+		pb.z = mesh->mVertices[i].z;
+		_vertex_array.push_back(pb);
 
-		// load _vertex_array from mesh->mVertices
-
-		if (mesh->HasTextureCoords(0))
+		ga_vec2f pbt = { 0.0, 0.0 };
+		if (mesh->HasTextureCoords(i))
 		{
-			// transfer _texcoords from mesh equivalent
+			
+			pbt.x = mesh->mTextureCoords[i]->x;
+			pbt.y = mesh->mTextureCoords[i]->y;
 		}
+		_texcoords.push_back(pbt);
+
 		if (mesh->HasNormals())
 		{
-			// transfer _normals from mesh equivalent
+			ga_vec3f pbn;
+			pbn.x = mesh->mNormals[i].x;
+			pbn.y = mesh->mNormals[i].y;
+			pbn.z = mesh->mNormals[i].z;
+			_normals.push_back(pbn);
+
 		}
 	}
 	for (int f = 0; f < mesh->mNumFaces; f++)
 	{
-		// the mesh->mFaces array contains faces made up of indices...
-		// our mesh's _index_array should contain ours...
+		for (int i = 0; i < mesh->mFaces[f].mNumIndices; i++) {
+			_index_array.push_back(GLushort(mesh->mFaces[f].mIndices[i]));
+		}
+		
+
 	}
+
+	_index_count = _index_array.size();
 }
 
 void ga_mesh::make_buffers()
@@ -132,6 +145,31 @@ void ga_mesh::make_buffers()
 	// TODO: Homework 4 
 	// set up vertex and element array buffers for positions, indices, uv's and normals
 	// things are already in the ga_mesh's arrays...
+
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+	glGenBuffers(4, _vbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, _vertex_array.size() * sizeof(ga_vec3f), _vertex_array.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _index_array.size() * sizeof(GLushort), _index_array.data(), GL_STATIC_DRAW);
+	//glVertexAttribPointer(1, 3, GL_UNSIGNED_SHORT, GL_FALSE, 0, 0);
+	//glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, _texcoords.size() * sizeof(ga_vec2f), _texcoords.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[3]);
+	glBufferData(GL_ARRAY_BUFFER, _normals.size() * sizeof(ga_vec3f), _normals.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(3);
+
 
 }
 
@@ -151,6 +189,10 @@ void ga_mesh::create_from_aiMesh(aiMesh* mesh, const aiScene* scene)
 
 	// TODO: Homework 4
 	// set the diffuse color for the material 
+	aiColor4D color;
+	aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &color);
+	ga_vec3f passColor = { color.r, color.g, color.b };
+	mat->set_diffuse(passColor);
 
 	// get color from the scene->mMaterials[] according to the mesh->mMaterialIndex
 	// check out the structure of ga_lit_material

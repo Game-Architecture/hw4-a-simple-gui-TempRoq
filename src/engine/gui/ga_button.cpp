@@ -22,7 +22,7 @@ ga_button::ga_button(const char* text, float x, float y, ga_frame_params* params
 		ga_widget::draw_outline(params, _min, _max, gw.k_button_press_color, gw.k_button_offset);
 	}
 	
-	else if (get_hover) {
+	else if (get_hover(params)) {
 		ga_widget::draw_outline(params, _min, _max, gw.k_button_hover_color, gw.k_button_offset);
 	}
 
