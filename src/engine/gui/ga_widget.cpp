@@ -26,8 +26,9 @@ void ga_widget::draw_outline(ga_frame_params* params, const ga_vec2f& min, const
 
 	drawcall._positions.push_back({ min.x, min.y, 0.0f });
 	drawcall._positions.push_back({ max.x, min.y, 0.0f });
-	drawcall._positions.push_back({ min.x, max.y, 0.0f });
 	drawcall._positions.push_back({ max.x, max.y, 0.0f });
+	drawcall._positions.push_back({ min.x, max.y, 0.0f });
+
 
 	drawcall._indices.push_back(0);
 	drawcall._indices.push_back(1);

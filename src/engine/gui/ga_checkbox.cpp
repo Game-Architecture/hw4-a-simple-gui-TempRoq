@@ -16,14 +16,17 @@ ga_checkbox::ga_checkbox(bool state, const char* text, float x, float y, ga_fram
 {
 	ga_widget gw;
 	extern ga_font* g_font;
-	g_font->print(params, text, x, y, gw.k_text_color, &_min, &_max);
+	g_font->print(params, text, x + k_checkbox_offset, y, gw.k_text_color, &_min, &_max);
 
+	_min = { x, _min.y };
+	_max = { x + (_max.y - _min.y), _max.y };
 
 	ga_widget::draw_outline(params, _min, _max, gw.k_button_color, gw.k_checkbox_offset);
 
 	if (state) {
 		ga_widget::draw_check(params, _min, _max, gw.k_button_color);
 	}
+
 }
 
 ga_checkbox::~ga_checkbox()
